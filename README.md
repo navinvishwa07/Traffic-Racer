@@ -1,1 +1,1 @@
-Traffic racer is a game made with oops
+Traffic racer is a game made with C++
