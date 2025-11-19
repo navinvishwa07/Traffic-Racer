@@ -5,7 +5,7 @@ using namespace std;
 const LANE_LEFT = 0.00f; /*temporary values*/
 const LANE_RIGHT = 0.00f; /*temporary values*/
 const LANE_MIDDLE = 0.00f; /*temporary values*/
-66569989=09=-990000-==
+
 const float LANE_POSITIONS[3] = { LANE_LEFT, LANE_MIDDLE, LANE_RIGHT };
 const float LERP_SPEED = 0.15f;
 
