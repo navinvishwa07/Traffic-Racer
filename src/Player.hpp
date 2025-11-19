@@ -20,4 +20,4 @@ class Player {
         float targetX;
         float yPos;
 
-}
+};
