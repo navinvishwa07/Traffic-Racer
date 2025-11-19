@@ -18,6 +18,6 @@ class Player {
         int laneIndex;
         float currentX;
         float targetX;
-        float yPos;
+        float yPos = 550.0f; 
 
 };
