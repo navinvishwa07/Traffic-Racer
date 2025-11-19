@@ -13,7 +13,7 @@ Player :: Player()
 {
     if(!texture.loadFromFile("/assets/player.png")) /* loading the player image and checks if its available */
     {
-        std :: cer << " Could access Player file ";
+        std::cer << " Could access Player file ";
     }
     sprite.setTexture(texture);
     sprite.setScale(0.5f, 0.5f); /* adjusting car size to fit the road*/
