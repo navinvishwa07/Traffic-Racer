@@ -1,40 +1,54 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "Player.hpp"
-// Forward declarations for classes we will build later
-// class VehicleManager;
-// class Background;
+#include "Road.hpp"
+#include "VehicleManager.hpp"
+
+enum GameState {
+    MENU,
+    PLAYING,
+    GAME_OVER
+};
 
 class Game {
 public:
-    // Game States (as defined in your design document)
-    enum GameState {
-        START_SCREEN,
-        PLAYING,
-        GAME_OVER
-    };
-
-    // Constructor requires the window to be passed from main
-    Game(sf::RenderWindow& window); 
-
+    Game();
     void run();
-    void handleInput();
-    void update(float dt);
-    void render();
-    void checkCollisions();
-    void resetGame();
 
 private:
-    sf::RenderWindow& window;
-    Player player;
-    // VehicleManager vehicleManager; // Placeholder
-    // Background background;       // Placeholder
-    
-    GameState currentState;
-    
-    sf::Font font;
-    sf::Text scoreText;
+    void processEvents();
+    void update(float dt);
+    void render();
+    void resetGame();
+    void spawnCoin();
 
-    float score;
-    sf::Clock clock; // Used for calculating delta time (dt)
-}; 
+    sf::RenderWindow window;
+    
+    Player player;
+    Road road;
+    VehicleManager vehicleManager;
+
+    sf::Texture tPlayer, tRoad, tCoin; 
+    sf::Texture tStartBtn, tRestartBtn; 
+
+    std::vector<sf::Texture> vehicleTextures; 
+
+    sf::Sprite btnStart;
+    sf::Sprite btnRestart;
+
+    std::vector<sf::Sprite> coins;
+    float coinSpawnTimer;
+
+    sf::Font font;
+    
+    // --- UI TEXT ---
+    sf::Text textScore; // Will stay Top Left
+    sf::Text textCoins; // Will move to Top Right
+    sf::Text textGameOver; 
+
+    GameState currentState; 
+    float gameSpeed;
+    int score;
+    int coinPoints;
+};
