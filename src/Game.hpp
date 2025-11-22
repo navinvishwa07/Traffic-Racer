@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp> // Required for Sound
 #include <vector>
+#include <fstream> // Required for file saving
 #include "Player.hpp"
 #include "Road.hpp"
 #include "VehicleManager.hpp"
@@ -22,6 +24,10 @@ private:
     void render();
     void resetGame();
     void spawnCoin();
+    
+    // High Score Persistence
+    void loadHighScore();
+    void saveHighScore();
 
     sf::RenderWindow window;
     
@@ -29,26 +35,37 @@ private:
     Road road;
     VehicleManager vehicleManager;
 
+    // Textures
     sf::Texture tPlayer, tRoad, tCoin; 
     sf::Texture tStartBtn, tRestartBtn; 
-
     std::vector<sf::Texture> vehicleTextures; 
 
+    // Sprites
     sf::Sprite btnStart;
     sf::Sprite btnRestart;
-
     std::vector<sf::Sprite> coins;
-    float coinSpawnTimer;
 
+    // Audio
+    sf::SoundBuffer sbCoin, sbCrash, sbBoost;
+    sf::Sound soundCoin, soundCrash, soundBoost;
+
+    // UI Components
     sf::Font font;
-    
-    // --- UI TEXT ---
-    sf::Text textScore; // Will stay Top Left
-    sf::Text textCoins; // Will move to Top Right
+    sf::Text textScore; 
+    sf::Text textHighScore;
+    sf::Text textSpeed;     // New Speed Display
     sf::Text textGameOver; 
+    
+    // Grey Overlay for Game Over
+    sf::RectangleShape gameOverOverlay;
 
+    // Game Data
     GameState currentState; 
     float gameSpeed;
-    int score;
-    int coinPoints;
+    float coinSpawnTimer;
+    int score;      
+    int highScore;
+    
+    // Track speed for sound effects
+    int lastSpeedLevel; 
 };

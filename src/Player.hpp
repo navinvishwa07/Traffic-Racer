@@ -2,22 +2,27 @@
 #include <SFML/Graphics.hpp>
 
 class Player {
-    public:
-        Player();
+public:
+    Player();
 
-        void moveLeft();
-        void moveRight();
-        void update(float dt);
-        void draw(sf::RenderWindow &window);
-        sf::FloatRect getBounds() const;
+    // Added init to receive the texture from the Game class
+    void init(const sf::Texture& texture); 
 
-    private:
-        sf::Sprite sprite;
-        sf::Texture texture;
+    void moveLeft();
+    void moveRight();
+    
+    // dt is good for frame-rate independent movement
+    void update(float dt); 
+    
+    void draw(sf::RenderWindow &window);
+    sf::FloatRect getBounds() const;
 
-        int laneIndex;
-        float currentX;
-        float targetX;
-        float yPos = 550.0f; 
+private:
+    sf::Sprite sprite;
+    // REMOVED: sf::Texture texture; (Store this in Game.hpp instead)
 
-};
+    int laneIndex;
+    float currentX;
+    float targetX;
+    float yPos;
+}; // <--- DON'T FORGET THIS SEMICOLON

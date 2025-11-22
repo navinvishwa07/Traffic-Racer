@@ -1,22 +1,18 @@
-# CMake minimum version requirement
 cmake_minimum_required(VERSION 3.16)
-project(TrafficRacer CXX) # Specify CXX language for C++ project
-
-# Set C++ Standard
+project(TrafficRacer)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# 1. Find SFML
-# Use the correct component names as defined by the FindSFML module
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED) 
-# Note: Changed '3' to '2.5'
+# --- 1. MANUAL MAC CONFIGURATION ---
+# Tell CMake exactly where Homebrew keeps the header files
+include_directories("/opt/homebrew/include")
 
-# 2. Include directories
-# We need to include the 'src' folder where all headers are located.
-include_directories(src) 
-# Note: Changed 'include' to 'src'
+# Tell CMake exactly where the library files are
+link_directories("/opt/homebrew/lib")
 
-# Source files (Looks correct based on your file structure)
+# Include your own header folder
+include_directories(include)
+
+# --- 2. SOURCE FILES ---
 set(SOURCES
     src/main.cpp
     src/Game.cpp
@@ -26,10 +22,9 @@ set(SOURCES
     src/VehicleManager.cpp
 )
 
-# Add executable
+# --- 3. BUILD APP ---
 add_executable(TrafficRacer ${SOURCES})
 
-# 3. Link SFML
-# We must link using the CMake targets (e.g., SFML::graphics) created by find_package.
-target_link_libraries(TrafficRacer PRIVATE SFML::graphics SFML::window SFML::system)
-# Note: Changed 'sfml-graphics' to 'SFML::graphics' and specified PRIVATE linking.
+# --- 4. LINK LIBRARIES ---
+# CRITICAL CHANGE: Added "sfml-audio" to the end of this list
+target_link_libraries(TrafficRacer sfml-graphics sfml-window sfml-system sfml-audio)

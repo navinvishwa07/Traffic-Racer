@@ -35,7 +35,7 @@ void VehicleManager::update(float dt, float gameSpeed, int& score) {
         it->update(dt);
 
         if (it->isOffScreen()) {
-            score += 10;
+            // Note: We do not add to score here anymore, only coins count.
             it = vehicles.erase(it);
         } else {
             ++it;
@@ -49,11 +49,13 @@ void VehicleManager::draw(sf::RenderWindow& window) {
     }
 }
 
+// --- SUPER SMALL HITBOX FIX ---
 bool VehicleManager::checkCollision(sf::FloatRect playerBounds) {
     
-    // 1. Shrink PLAYER Hitbox
-    float playerShrinkX = 20.f;
-    float playerShrinkY = 20.f;
+    // 1. Player Hitbox: Remove 30% from each side
+    // This allows you to "tilt" without the corners snagging
+    float playerShrinkX = playerBounds.width * 0.30f;
+    float playerShrinkY = playerBounds.height * 0.20f;
 
     playerBounds.left += playerShrinkX;
     playerBounds.width -= (playerShrinkX * 2);
@@ -63,13 +65,11 @@ bool VehicleManager::checkCollision(sf::FloatRect playerBounds) {
     for (const auto& v : vehicles) {
         sf::FloatRect enemyBounds = v.getBounds();
 
-        // 2. AGGRESSIVE ENEMY HITBOX REDUCTION
+        // 2. Enemy Hitbox: Remove 40% from EACH side
+        // This leaves only a thin 20% strip in the middle as "deadly"
+        float enemyShrinkX = enemyBounds.width * 0.40f; 
         
-        // SIDES: Remove 35% from EACH side (Total 70% width reduction)
-        // This makes the car very thin collision-wise
-        float enemyShrinkX = enemyBounds.width * 0.35f; 
-        
-        // FRONT/BACK: Remove 20% from Top/Bottom (Total 40% height reduction)
+        // Remove 20% from top/bottom to avoid bumper crashes
         float enemyShrinkY = enemyBounds.height * 0.20f; 
 
         enemyBounds.left += enemyShrinkX;
@@ -77,7 +77,6 @@ bool VehicleManager::checkCollision(sf::FloatRect playerBounds) {
         enemyBounds.top += enemyShrinkY;
         enemyBounds.height -= (enemyShrinkY * 2);
 
-        // Check if the two smaller boxes touch
         if (enemyBounds.intersects(playerBounds)) {
             return true;
         }

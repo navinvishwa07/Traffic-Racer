@@ -1,75 +1,57 @@
 #include "Player.hpp"
-#include <iostream>
-using namespace std;
+#include "Constants.hpp" // We need this for LANE_MIDDLE, etc.
 
-const LANE_LEFT = 0.00f; /*temporary values*/
-const LANE_RIGHT = 0.00f; /*temporary values*/
-const LANE_MIDDLE = 0.00f; /*temporary values*/
+Player::Player() {
+    // We only set variables here. 
+    // We DO NOT load the texture here anymore.
+    laneIndex = 1; 
+    currentX = LANE_MIDDLE;
+    targetX = LANE_MIDDLE;
+}
 
-const float LANE_POSITIONS[3] = { LANE_LEFT, LANE_MIDDLE, LANE_RIGHT };
-const float LERP_SPEED = 0.15f;
-
-Player :: Player()
-{
-    if(!texture.loadFromFile("/assets/player.png")) /* loading the player image and checks if its available */
-    {
-        std::cerr << " Could access Player file ";
-    }
+void Player::init(const sf::Texture& texture) {
+    // The Game class gives us the texture now
     sprite.setTexture(texture);
-    sprite.setScale(0.5f, 0.5f); /* adjusting car size to fit the road*/
-
-    /* sets origin as the centre of the sprite - easier later*/
-    sf::FloatRect bounds = sprite.getLocalBounds();
-    sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f); 
-
+    sprite.setScale(0.5f, 0.5f); // Resize if needed
     
-    /*players starting state*/
-    laneIndex = 1; // the middle lane 
-    currentX = LANE_POSITIONS[laneIndex];
-    targetX = currentX;
-
-    sprite.setPosition(currentX, yPos);
-
+    // Center the sprite
+    sf::FloatRect bounds = sprite.getLocalBounds();
+    sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    
+    sprite.setPosition(currentX, PLAYER_Y);
 }
 
-/* 
-lanes divided into 0 - left lane, 1 - middle lane, 2 - right lane
-check current lane then update the cars position by how the car is moved
-*/
-void Player :: moveLeft()
-{
-    if(laneIndex > 0)
-    {
+void Player::moveLeft() {
+    if (laneIndex > 0) {
         laneIndex--;
-        targetX = LANE_POSITIONS[laneIndex];
+        if (laneIndex == 0) targetX = LANE_LEFT;
+        if (laneIndex == 1) targetX = LANE_MIDDLE;
     }
 }
 
-void Player :: moveRight()
-{
-    if(laneIndex < 2) 
-    {
+void Player::moveRight() {
+    if (laneIndex < 2) {
         laneIndex++;
-        targetX = LANE_POSITIONS[laneIndex];
+        if (laneIndex == 1) targetX = LANE_MIDDLE;
+        if (laneIndex == 2) targetX = LANE_RIGHT;
     }
 }
 
-void Player::update(float dt) 
-{
-    // It moves currentX *towards* targetX by a small amount each frame
-    currentX += (targetX - currentX) * LERP_SPEED;
+void Player::update(float dt) {
+    // Smooth glide logic
+    currentX += (targetX - currentX) * LANE_SMOOTHING * dt;
+    
+    // Tilt effect
+    float tilt = (targetX - currentX) * 0.15f;
+    sprite.setRotation(tilt);
 
-    // Update the sprite's actual on-screen position
-    sprite.setPosition(currentX, yPos);
+    sprite.setPosition(currentX, PLAYER_Y);
 }
 
-void Player::draw(sf::RenderWindow &window) 
-{
+void Player::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-// Used for collision detection 
-sf::FloatRect Player::getBounds() const 
-{
-    return sprite.getGlobalBounds(); // global bound - used when we need to the bound to move with the object .
+sf::FloatRect Player::getBounds() const {
+    return sprite.getGlobalBounds();
 }
