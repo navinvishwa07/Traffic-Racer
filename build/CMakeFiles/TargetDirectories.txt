@@ -1,3 +1,0 @@
-/Users/ishithailan/Downloads/Traffic-Racer/build/CMakeFiles/TrafficRacer.dir
-/Users/ishithailan/Downloads/Traffic-Racer/build/CMakeFiles/edit_cache.dir
-/Users/ishithailan/Downloads/Traffic-Racer/build/CMakeFiles/rebuild_cache.dir
